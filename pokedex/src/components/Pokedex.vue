@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row">
+  <div class="flex flex-col">
     <h2 class="text-2xl font-bold text-center mb-4">Pokédex</h2>
 
     <!-- Spinner di caricamento -->
@@ -10,26 +10,19 @@
 
     <!-- Griglia Pokémon -->
     <div
-      v-else-if="pokemons.length"
-      class="flex flex-row"
-    >
+        v-else-if="pokemons.length"
+        class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
+      >
       <div
         v-for="pokemon in pokemons"
         :key="pokemon.name"
-        class="p-4 border-1 border-gray-200 rounded-lg shadow-2xl bg-white flex flex-column items-center text-black"
+        class="w-30 h-40 border border-gray-200 rounded-lg shadow-lg bg-white flex flex-col items-center justify-center text-black cursor-pointer transition transform hover:scale-105"
+        @click="$router.push({ name: 'PokemonDetail', params: { id: getPokemonId(pokemon.url) } })"
       >
         <img
           :src="getPokemonImage(pokemon.url)"
           :alt="pokemon.name"
-          class="w-24 h-24 mb-3"
-        />
-        <h3 class="text-lg font-semibold text-center capitalize">
-          {{ pokemon.name }}
-        </h3>
-        <Button
-          label="Vedi"
-          class="w-full mt-2 bg-green-500 text-white"
-          @click="fetchDetails(pokemon.url)"
+          class="w-30 h-30"
         />
       </div>
     </div>
@@ -107,9 +100,14 @@ export default {
       return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
     };
 
+    const getPokemonId = (url) => {
+      return url.split("/").filter(Boolean).pop();
+    };
+
+
     onMounted(fetchPokemons);
 
-    return { pokemons, selectedPokemon, showDialog, fetchDetails, getPokemonImage, loading };
+    return { pokemons, selectedPokemon, showDialog, fetchDetails, getPokemonImage, loading, getPokemonId };
   },
 };
 </script>
