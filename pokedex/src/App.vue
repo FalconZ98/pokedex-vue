@@ -1,6 +1,5 @@
 <script setup>
-import Pokedex from './components/Pokedex.vue'
-import TestTailwind from './components/TestTailwind.vue';
+import Navbar from './layouts/Navbar.vue';
 </script>
 
 <!-- <template>
@@ -9,6 +8,7 @@ import TestTailwind from './components/TestTailwind.vue';
   </main>
 </template> -->
 <template>
+  <navbar />
   <router-view />
 </template>
 

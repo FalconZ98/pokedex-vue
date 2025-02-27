@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-900 text-white">
-      <h2 class="text-3xl font-bold mb-4 capitalize">{{ pokemon.name }}</h2>
+      <h2 v-if="pokemon" class="text-3xl font-bold mb-4 capitalize">{{ pokemon.name }}</h2>
   
       <div v-if="loading" class="text-center">
         <ProgressSpinner />
@@ -10,8 +10,8 @@
       <div v-else-if="pokemon" class="p-6 bg-white text-black rounded-lg shadow-lg max-w-md">
         <img :src="pokemon.sprites?.front_default" class="mx-auto my-3 w-32 h-32" />
         <p><strong>Base Experience:</strong> {{ pokemon.base_experience }}</p>
-        <p><strong>Altezza:</strong> {{ pokemon.height }}</p>
-        <p><strong>Peso:</strong> {{ pokemon.weight }}</p>
+        <p><strong>Height:</strong> {{ pokemon.height }}</p>
+        <p><strong>Weight:</strong> {{ pokemon.weight }}</p>
   
         <h4 class="font-semibold mt-3">Tipi:</h4>
         <ul> 
@@ -22,7 +22,7 @@
   
         <!-- SEZIONE EVOLUZIONI -->
         <div v-if="evolutions.length" class="mt-6">
-          <h3 class="text-xl font-bold text-center mb-3">Evoluzioni</h3>
+          <h3 class="text-xl font-bold text-center mb-3">Evolutions</h3>
           <div class="flex justify-center gap-4">
             <div
               v-for="evolution in evolutions"
@@ -55,6 +55,7 @@
   export default {
     components: { ProgressSpinner },
     setup() {
+      console.log("setup");
       const route = useRoute();
       const pokemon = ref(null);
       const loading = ref(true);
@@ -62,6 +63,7 @@
   
       // Funzione per ottenere i dettagli del Pokémon
       const fetchPokemonDetails = async () => {
+        console.log("fetchPokemonDetails");
         loading.value = true;
         try {
           const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${route.params.id}`);

@@ -1,8 +1,7 @@
 <template>
-  <div class="flex flex-col">
-    <h2 class="text-2xl font-bold text-center mb-4">Pokédex</h2>
-
+  <div class="flex flex-col bg-gray-200 text-black p-6">
     <!-- Spinner di caricamento -->
+    <h3 class="text-center font-bold">Seleziona un pokémon per vederne i dettagli!</h3>
     <div v-if="loading" class="text-center">
       <ProgressSpinner />
       <p>Caricamento Pokémon...</p>
@@ -10,13 +9,14 @@
 
     <!-- Griglia Pokémon -->
     <div
-        v-else-if="pokemons.length"
-        class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
+        v-else-if="paginatedPokemons.length"
+        class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-2"
       >
       <div
-        v-for="pokemon in pokemons"
+        v-for="pokemon in paginatedPokemons"
         :key="pokemon.name"
-        class="w-30 h-40 border border-gray-200 rounded-lg shadow-lg bg-white flex flex-col items-center justify-center text-black cursor-pointer transition transform hover:scale-105"
+        id="pokemon"
+        class="w-30 h-40 border border-gray-200 rounded-lg shadow-xl bg-white flex flex-col items-center justify-center text-black transition transform hover:scale-105"
         @click="$router.push({ name: 'PokemonDetail', params: { id: getPokemonId(pokemon.url) } })"
       >
         <img
@@ -26,44 +26,48 @@
         />
       </div>
     </div>
-
+    
     <div v-else class="text-center text-red-500">
       Nessun Pokémon trovato
     </div>
 
-    <!-- Modale per i dettagli del Pokémon -->
-    <Dialog v-model:visible="showDialog" header="Dettagli Pokémon" modal>
-      <template v-if="selectedPokemon">
-        <h3 class="text-xl font-bold capitalize">{{ selectedPokemon.name }}</h3>
-        <img :src="selectedPokemon.sprites?.front_default" class="mx-auto my-3" />
-        <p><strong>Base Experience:</strong> {{ selectedPokemon.base_experience }}</p>
-        <p><strong>Altezza:</strong> {{ selectedPokemon.height }}</p>
-        <p><strong>Peso:</strong> {{ selectedPokemon.weight }}</p>
-
-        <h4 class="font-semibold mt-3">Tipi:</h4>
-        <ul>
-          <li v-for="type in selectedPokemon.types" :key="type.type.name">
-            {{ type.type.name }}
-          </li>
-        </ul>
-      </template>
-    </Dialog>
+    <!-- Paginator -->
+    <Paginator 
+      v-if="pokemons.length" 
+      :rows="rowsPerPage" 
+      :totalRecords="pokemons.length" 
+      class="mt-6 shadow-2xl mb-0"
+      @page="onPageChange">
+    </Paginator>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import ProgressSpinner from 'primevue/progressspinner';
+import Paginator from 'primevue/paginator';
+import Breadcrumb from 'primevue/breadcrumb';
 
 export default {
-  components: { Button, Dialog, ProgressSpinner },
+  components: { Button, Dialog, ProgressSpinner, Paginator },
   setup() {
     const pokemons = ref([]);
     const selectedPokemon = ref(null);
     const showDialog = ref(false);
     const loading = ref(true);
+    
+    // Paginazione
+    const currentPage = ref(0);
+    const rowsPerPage = 24;
+
+    // Filtra i Pokémon in base alla pagina corrente
+    const paginatedPokemons = computed(() => {
+      const start = currentPage.value * rowsPerPage;
+      const end = start + rowsPerPage;
+      return pokemons.value.slice(start, end);
+    });
 
     // Recupera i Pokémon dalla PokeAPI
     const fetchPokemons = async () => {
@@ -96,7 +100,7 @@ export default {
     // Ottieni l'immagine del Pokémon dall'URL
     const getPokemonImage = (url) => {
       if (!url) return '';
-      const id = url.split('/').filter(Boolean).pop(); // Estrae l'ID dall'URL
+      const id = url.split('/').filter(Boolean).pop();
       return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
     };
 
@@ -104,10 +108,26 @@ export default {
       return url.split("/").filter(Boolean).pop();
     };
 
+    // Cambia pagina nel paginator
+    const onPageChange = (event) => {
+      currentPage.value = event.page;
+    };
 
     onMounted(fetchPokemons);
 
-    return { pokemons, selectedPokemon, showDialog, fetchDetails, getPokemonImage, loading, getPokemonId };
+    return { 
+      pokemons, 
+      paginatedPokemons, 
+      selectedPokemon, 
+      showDialog, 
+      fetchDetails, 
+      getPokemonImage, 
+      loading, 
+      getPokemonId, 
+      currentPage, 
+      rowsPerPage, 
+      onPageChange 
+    };
   },
 };
 </script>
