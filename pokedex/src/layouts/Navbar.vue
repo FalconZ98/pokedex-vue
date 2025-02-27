@@ -11,7 +11,7 @@
             <router-link to="/pokedex" class="hover:text-yellow-400 transition">Pokédex</router-link>
           </li>
           <li>
-            <router-link to="/" class="hover:text-yellow-400 transition">Regioni</router-link>
+            <router-link to="/regions" class="hover:text-yellow-400 transition">Regioni</router-link>
           </li>
           <li>
             <router-link to="/" class="hover:text-yellow-400 transition">Lista abilità</router-link>
