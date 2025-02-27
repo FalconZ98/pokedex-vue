@@ -7,7 +7,11 @@ import Locations from "@/components/Locations.vue";
 import PokemonTeam from "@/components/PokemonTeam.vue";
 import Profile from "@/components/Utente/Profile.vue";
 import PokemonManager from "@/components/Utente/PokemonManager.vue";
-import AvatarSelector from "@/components/Utente/AvatarSelector.vue";
+import Arcade from "@/components/Arcade.vue";
+import TeamManager from "@/components/TeamManager.vue";
+import BattleMode from "@/components/BattleMode.vue";
+import Inventory from "@/components/Inventory.vue";
+import BillPC from "@/components/BillPC.vue";
 
 const routes = [
   { path: "/", component: Home },
@@ -18,7 +22,11 @@ const routes = [
   { path: "/pokemon-team", name: "PokemonTeam", component: PokemonTeam },
   { path: "/profile", name: "Profile", component: Profile },
   { path: "/pokemon-manager", name: "PokemonManager", component: PokemonManager },
-  { path: "/avatar-selector", name: "AvatarSelector", component: AvatarSelector },
+  { path: "/arcade", name: "Arcade", component: Arcade},
+  { path: "/team-manager", name: "TeamManager", component: TeamManager},
+  { path: "/battle-mode", name: "BattleMode", component: BattleMode},
+  { path: "/inventory", name: "Inventory", component: Inventory},
+  { path: "/bill-pc", name: "BillPC", component: BillPC}
 ];
 
 const router = createRouter({

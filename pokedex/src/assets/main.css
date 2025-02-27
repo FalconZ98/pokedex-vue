@@ -6,6 +6,7 @@ html {
   scrollbar-width: none;
   -ms-overflow-style: none;
    overflow: auto;
+   background-color: #e5e7eb;
 }
 
 body { margin: 0;
