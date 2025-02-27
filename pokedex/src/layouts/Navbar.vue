@@ -14,11 +14,17 @@
             <router-link to="/regions" class="hover:text-yellow-400 transition">Regioni</router-link>
           </li>
           <li>
+            <router-link to="/locations" class="hover:text-yellow-400 transition">Locations</router-link>
+          </li>
+          <li>
             <router-link to="/" class="hover:text-yellow-400 transition">Lista abilità</router-link>
           </li>
           <li>
             <router-link to="/" class="hover:text-yellow-400 transition">Lista oggetti</router-link>
-          </li>
+          </li>  
+          <li>
+            <router-link to="/profile" class="hover:text-yellow-400 transition">Profilo</router-link>
+          </li>  
         </ul>
       </div>
     </nav>

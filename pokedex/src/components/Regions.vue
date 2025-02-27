@@ -34,9 +34,9 @@
         <Column header="Località">
             <template #body="{ data }">
                 <Button 
-                    label="Vedi" 
-                    class="p-button-sm p-button-info"
-                    @click="showLocations(data)"
+                label="Vedi" 
+                class="p-button-sm p-button-info"
+                @click="$router.push({ name: 'Locations', query: { region: data.name } })"
                 />
             </template>
         </Column>
@@ -98,7 +98,7 @@
                     main_generation: regionData.main_generation
                         ? generationMap[regionData.main_generation.name] || "N/A"  // Converte in numero o mostra "N/A"
                         : "N/A",
-                    version_groups: regionData.version_groups.map(vg => vg.name),
+                    version_groups: regionData.version_groups.map(vg => vg.name.replace(/-/g, " ")),
                 };
                 } catch (error) {
                 console.error("Errore nel recupero della regione:", error);
