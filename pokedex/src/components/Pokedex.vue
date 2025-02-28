@@ -2,9 +2,9 @@
   <div class="flex flex-col bg-gray-200 text-black p-6">
     <!-- Spinner di caricamento -->
     <h3 class="text-center font-bold">Seleziona un pokémon per vederne i dettagli!</h3>
-    <div v-if="loading" class="text-center">
-      <ProgressSpinner />
-      <p>Caricamento Pokémon...</p>
+    <div v-if="loading" class="text-center flex flex-col items-center">
+        <img src="https://media.tenor.com/Hg2Mb_mQdhYAAAAi/pokemon-pokeball.gif" alt="Loading" class="w-50 h-24" />
+        <p>Caricamento Pokémon...</p>
     </div>
 
     <!-- Griglia Pokémon -->

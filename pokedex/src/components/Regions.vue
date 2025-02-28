@@ -4,9 +4,9 @@
       <h2 class="text-2xl font-bold text-center mb-4">Regioni Pokémon</h2>
   
       <!-- Spinner di caricamento -->
-      <div v-if="loading" class="text-center">
-        <ProgressSpinner />
-        <p>Caricamento Regioni...</p>
+      <div v-if="loading" class="text-center flex flex-col items-center">
+        <img src="https://media.tenor.com/Hg2Mb_mQdhYAAAAi/pokemon-pokeball.gif" alt="Loading" class="w-50 h-24" />
+        <p>Caricamento ...</p>
       </div>
   
       <!-- Tabella -->
