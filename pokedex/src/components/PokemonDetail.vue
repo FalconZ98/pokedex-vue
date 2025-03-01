@@ -1,64 +1,86 @@
 <template>
-    <div class="h-[calc(100vh-5rem)] flex flex-col items-center justify-center p-6 text-black font-bold">
-      <h2 v-if="pokemon" class="text-3xl font-bold mb-4 capitalize">{{ pokemon.name }}</h2>
-  
-      <div v-if="loading" class="text-center flex flex-col items-center">
-        <img src="https://media.tenor.com/Hg2Mb_mQdhYAAAAi/pokemon-pokeball.gif" alt="Loading" class="w-50 h-24" />
-        <p>Caricamento ...</p>
-      </div>
-  
-      <div v-else-if="pokemon" class="p-6 bg-white text-black rounded-lg shadow-lg max-w-md">
-        <img :src="pokemon.sprites?.front_default" class="mx-auto my-3 w-32 h-32" />
-        <p><strong>Base Experience:</strong> {{ pokemon.base_experience }}</p>
-        <p><strong>Height:</strong> {{ pokemon.height }}</p>
-        <p><strong>Weight:</strong> {{ pokemon.weight }}</p>
-  
-        <h4 class="font-semibold mt-3"><strong>Type:</strong></h4>
-        <ul class="flex gap-2 justify-center mt-2">
-          <li v-for="type in pokemon.types" :key="type.type.name">
-            <img :src="getTypeImage(type.type.name)" :alt="type.type.name" class="w-12 h-6" />
-          </li>
-        </ul>
+  <div class="h-[calc(100vh-5rem)] flex flex-col items-center justify-center p-6 text-black font-bold">
+    <h2 v-if="pokemon" class="text-3xl font-bold mb-4 capitalize">{{ pokemon.name }}</h2>
 
-        <h4 class="font-semibold mt-3">Egg groups:</h4>
-        <ul class="flex gap-2 justify-center mt-2">
-          <li v-for="group in eggGroups" :key="group">
-            {{ group }}
-          </li>
-        </ul>
+    <div v-if="loading" class="text-center flex flex-col items-center">
+      <img src="https://media.tenor.com/Hg2Mb_mQdhYAAAAi/pokemon-pokeball.gif" alt="Loading" class="w-50 h-24" />
+      <p>Caricamento ...</p>
+    </div>
 
-        <h4 class="font-semibold mt-3">Habitats:</h4>
-        <ul class="flex gap-2 justify-center mt-2">
-            {{ habitat }}
-        </ul>
+    <div v-else-if="pokemon" class="p-6 bg-white text-black rounded-lg shadow-lg max-w-md">
+      <img :src="pokemon.sprites?.front_default" class="mx-auto my-3 w-32 h-32" />
+      <p><strong>Base Experience:</strong> {{ pokemon.base_experience }}</p>
+      <p><strong>Height:</strong> {{ pokemon.height }}</p>
+      <p><strong>Weight:</strong> {{ pokemon.weight }}</p>
 
-  
-        <!-- SEZIONE EVOLUZIONI -->
-        <div v-if="evolutions.length" class="mt-6">
-          <h3 class="text-xl font-bold text-center mb-3">Evolutions</h3>
-          <div class="flex justify-center gap-4">
-            <div
-              v-for="evolution in evolutions"
-              :key="evolution.id"
-              class="cursor-pointer text-center"
-              @click="$router.push({ name: 'PokemonDetail', params: { id: evolution.id } })"
-            >
-              <img :src="getPokemonImage(evolution.id)" :alt="evolution.name" class="w-20 h-20 mx-auto" />
-              <p class="capitalize font-semibold mt-2">{{ evolution.name }}</p>
-            </div>
+      <h4 class="font-semibold mt-3"><strong>Type:</strong></h4>
+      <ul class="flex gap-2 justify-center mt-2">
+        <li v-for="type in pokemon.types" :key="type.type.name">
+          <img :src="getTypeImage(type.type.name)" :alt="type.type.name" class="w-12 h-6" />
+        </li>
+      </ul>
+
+      <h4 class="font-semibold mt-3">Efficacia Tipi:</h4>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+        <div v-if="superEffective.length">
+          <h5 class="text-red-500 font-bold">🔴 Debole contro</h5>
+          <div class="flex justify-center gap-2">
+            <img v-for="type in superEffective" :key="type" :src="getTypeImage(type)" class="w-12 h-6" />
           </div>
         </div>
-  
-        <router-link to="/" class="block mt-4 text-center bg-blue-500 text-white py-2 px-4 rounded-lg">
-          Torna al Pokédex
-        </router-link>
+        <div v-if="resistant.length">
+          <h5 class="text-green-500 font-bold">🟢 Resistente a</h5>
+          <div class="flex justify-center gap-2">
+            <img v-for="type in resistant" :key="type" :src="getTypeImage(type)" class="w-12 h-6" />
+          </div>
+        </div>
+        <div v-if="immune.length">
+          <h5 class="text-gray-500 font-bold">⚪ Impossibile danneggiare</h5>
+          <div class="flex justify-center gap-2">
+            <img v-for="type in immune" :key="type" :src="getTypeImage(type)" class="w-12 h-6" />
+          </div>
+        </div>
       </div>
-  
-      <div v-else class="text-center text-red-500">
-        Pokémon non trovato
+
+      <h4 class="font-semibold mt-3">Egg groups:</h4>
+      <ul class="flex gap-2 justify-center mt-2">
+        <li v-for="group in eggGroups" :key="group">
+          {{ group }}
+        </li>
+      </ul>
+
+      <h4 class="font-semibold mt-3">Habitat:</h4>
+      <ul class="flex gap-2 justify-center mt-2">
+          {{ habitats }}
+      </ul>
+
+      <!-- SEZIONE EVOLUZIONI -->
+      <div v-if="evolutions.length" class="mt-6">
+        <h3 class="text-xl font-bold text-center mb-3">Evolutions</h3>
+        <div class="flex justify-center gap-4">
+          <div
+            v-for="evolution in evolutions"
+            :key="evolution.id"
+            class="cursor-pointer text-center"
+            @click="$router.push({ name: 'PokemonDetail', params: { id: evolution.id } })"
+          >
+            <img :src="getPokemonImage(evolution.id)" :alt="evolution.name" class="w-20 h-20 mx-auto" />
+            <p class="capitalize font-semibold mt-2">{{ evolution.name }}</p>
+          </div>
+        </div>
       </div>
+
+      <router-link to="/" class="block mt-4 text-center bg-blue-500 text-white py-2 px-4 rounded-lg">
+        Torna al Pokédex
+      </router-link>
     </div>
-  </template>
+
+    <div v-else class="text-center text-red-500">
+      Pokémon non trovato
+    </div>
+  </div>
+</template>
+
   
   <script>
   import { ref, onMounted, watch } from "vue";
@@ -68,13 +90,15 @@
   export default {
     components: { ProgressSpinner },
     setup() {
-      console.log("setup");
       const route = useRoute();
       const pokemon = ref(null);
       const loading = ref(true);
       const evolutions = ref([]);
       const eggGroups = ref([]);
-      const habitats = ref();
+      const habitats = ref([]);
+      const superEffective = ref([]);
+      const resistant = ref([]);
+      const immune = ref([]);
   
       // Funzione per ottenere i dettagli del Pokémon
       const fetchPokemonDetails = async () => {
@@ -89,6 +113,7 @@
           fetchEvolutionChain(pokemon.value.species.url);
           getEggGroups(pokemon.value.species.url);
           getHabitats(pokemon.value.species.url);
+          fetchTypeEffectiveness();
         } catch (error) {
           console.error("Errore nel recupero dei dettagli:", error);
         } finally {
@@ -165,20 +190,71 @@
           const speciesData = await response.json();
           console.log("Get habitats:", speciesData.habitat);
           // Estrarre i gruppi uova
-          habitats = speciesData.habitat.name;
+          habitats.value = speciesData.habitat 
+            ? speciesData.habitat.name.replace(/-/g, " ") 
+            : "Sconosciuto";
+          
           console.log("Get habitats:", habitats.value);
 
         } catch (error) {
           console.error("Errore nel recupero dei dettagli:", error);
         }
       };
+
+      const playCry = () => {
+          if (!pokemon.value) return;
+
+          const cryUrl = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/${pokemon.value.id}.ogg`;
+
+          const audio = new Audio(cryUrl);
+          audio.play();
+
+          // Attiva l'animazione mentre il suono è in riproduzione
+          isAnimating.value = true;
+          setTimeout(() => {
+              isAnimating.value = false;
+          }, 1500); // Durata approssimativa dell'audio
+      };
+
+      // Funzione per ottenere l'efficacia dei tipi
+      const fetchTypeEffectiveness = async () => {
+        try {
+          superEffective.value = [];
+          resistant.value = [];
+          immune.value = [];
+
+          for (const type of pokemon.value.types) {
+            const response = await fetch(type.type.url);
+            if (!response.ok) throw new Error("Errore nel recupero dell'efficacia del tipo");
+            const typeData = await response.json();
+
+            typeData.damage_relations.double_damage_from.forEach(t => {
+              if (!superEffective.value.includes(t.name)) superEffective.value.push(t.name);
+            });
+            typeData.damage_relations.half_damage_from.forEach(t => {
+              if (!resistant.value.includes(t.name)) resistant.value.push(t.name);
+            });
+            typeData.damage_relations.no_damage_from.forEach(t => {
+              if (!immune.value.includes(t.name)) immune.value.push(t.name);
+            });
+          }
+        } catch (error) {
+          console.error("Errore nel recupero dell'efficacia dei tipi:", error);
+        }
+      };
+
   
       onMounted(fetchPokemonDetails);
   
       // Se cambia l'ID del Pokémon (ad es. dopo il click su un'evoluzione), ricarica i dettagli
       watch(() => route.params.id, fetchPokemonDetails);
   
-      return { pokemon, loading, evolutions, getPokemonImage, getTypeImage, eggGroups, habitats };
+      return { 
+        pokemon, loading, evolutions, 
+        getPokemonImage, getTypeImage, eggGroups, 
+        habitats, fetchTypeEffectiveness, superEffective, 
+        resistant, immune 
+      };
     },
   };
   </script>
