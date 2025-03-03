@@ -95,7 +95,10 @@
       const loading = ref(true);
       const evolutions = ref([]);
       const eggGroups = ref([]);
-      const habitats = ref();
+      const habitats = ref([]);
+      const superEffective = ref([]);
+      const resistant = ref([]);
+      const immune = ref([]);
   
       // Funzione per ottenere i dettagli del Pokémon
       const fetchPokemonDetails = async () => {
@@ -187,7 +190,10 @@
           const speciesData = await response.json();
           console.log("Get habitats:", speciesData.habitat);
           // Estrarre i gruppi uova
-          habitats = speciesData.habitat.name;
+          habitats.value = speciesData.habitat 
+            ? speciesData.habitat.name.replace(/-/g, " ") 
+            : "Sconosciuto";
+          
           console.log("Get habitats:", habitats.value);
 
         } catch (error) {
@@ -243,7 +249,12 @@
       // Se cambia l'ID del Pokémon (ad es. dopo il click su un'evoluzione), ricarica i dettagli
       watch(() => route.params.id, fetchPokemonDetails);
   
-      return { pokemon, loading, evolutions, getPokemonImage, getTypeImage, eggGroups, habitats };
+      return { 
+        pokemon, loading, evolutions, 
+        getPokemonImage, getTypeImage, eggGroups, 
+        habitats, fetchTypeEffectiveness, superEffective, 
+        resistant, immune 
+      };
     },
   };
   </script>
