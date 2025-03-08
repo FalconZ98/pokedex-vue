@@ -101,7 +101,7 @@ export default {
     const getPokemonImage = (url) => {
       if (!url) return '';
       const id = url.split('/').filter(Boolean).pop();
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`;
     };
 
     const getPokemonId = (url) => {
