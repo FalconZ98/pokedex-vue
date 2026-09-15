@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: pokedex-db
+    restart: always
+    environment:
+      POSTGRES_USER: pokedex_user
+      POSTGRES_PASSWORD: pokedex_pass
+      POSTGRES_DB: pokedex
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pokedex_network
+
+  backend:
+    build:
+      context: ./pokedex-backend
+    container_name: pokedex-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_ENV: dev
+      APP_SECRET: ${APP_SECRET:-2bef8228d3aaa9a29bc74546ae87d0dc}
+      DATABASE_URL: postgresql://pokedex_user:pokedex_pass@postgres:5432/pokedex?serverVersion=15&charset=utf8
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-^https?://(localhost|127[.]0[.]0[.]1)(:[0-9]+)?$}
+    ports:
+      - "8000:8000"
+    networks:
+      - pokedex_network
+
+volumes:
+  postgres_data:
+
+networks:
+  pokedex_network:
